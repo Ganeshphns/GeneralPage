@@ -1,10 +1,13 @@
 import {
   UserRound,
   LayoutDashboard,
- 
+  CheckCheck,
+ BadgeDollarSign,
   Disc,
+  NotebookText,
   TriangleAlert,
-  LogOut
+  LogOut,
+  UserPlus
 } from "lucide-react";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,18 +29,34 @@ export const UserSidebarMenuItems = [
   
   },
   {
-    id: "heatmap",
-    label: "heatmap",
-    path: "/user/heatmap",
-    icon: <Disc size={20} />,
+    id: "plans",
+    label: "plans",
+    path: "/user/plans",
+    icon: <NotebookText size={20} />,
     
     
   },
   {
-    id: "alerts",
-    label: "alerts",
-    path: "/user/alerts",
-    icon: <TriangleAlert size={20} />,
+    id: "recommendations",
+    label: "recommendations",
+    path: "/user/recommendations",
+    icon: <CheckCheck size={20} />,
+    
+    
+  },
+  {
+    id: "my-subscriptions",
+    label: "my-subscriptions",
+    path: "/user/my-subscriptions",
+    icon: <UserPlus size={20} />,
+    
+    
+  },
+  {
+    id: "discounts",
+    label: "discounts",
+    path: "/user/discounts",
+    icon: <BadgeDollarSign size={20} />,
     
     
   },

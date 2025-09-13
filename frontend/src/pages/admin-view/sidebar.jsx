@@ -1,8 +1,8 @@
 import {
   UserStar,
   LayoutDashboard,
-  BusFront,
-  Disc,BatteryLow,Zap,TriangleAlert,Settings
+  NotebookText,
+  Disc,Plus,ChartNetwork,ChartNoAxesGantt,Settings,BadgeDollarSign
 } from "lucide-react";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,38 +17,50 @@ export const adminSidebarMenuItems = [
     icon: <LayoutDashboard size={20} />,
   },
   {
-    id: "mobility",
-    label: "mobility",
-    path: "/admin/mobility",
-    icon: <BusFront size={20} />,
+    id: "plans",
+    label: "plans",
+    path: "/admin/plans",
+    icon: <NotebookText size={20} />,
   },
   {
-    id: "enery",
-    label: "energy",
-    path: "/admin/energy",
-    icon: <BatteryLow size={20} />,
+    id: "ManagePlans",
+    label: "ManagePlans",
+    path: "/admin/ManagePlans",
+    icon: <Plus size={20} />,
   },
   {
-    id: "connectivity",
-    label: "connectivity",
-    path: "/admin/connectivity",
-    icon: <Zap size={20} />,
+    id: "ManageUsers",
+    label: "ManageUsers",
+    path: "/admin/ManageUsers",
+    icon: <ChartNoAxesGantt size={20} />,
+  },
+  {
+    id: "discounts",
+    label: "discounts",
+    path: "/admin/discounts",
+    icon: <BadgeDollarSign size={20} />,
+  },
+  {
+    id: "analytics",
+    label: "analytics",
+    path: "/admin/analytics",
+    icon: <ChartNetwork size={20} />,
     
   },
-  {
-    id: "heatmaps",
-    label: "heatmaps",
-    path: "/admin/heatmaps",
-    icon: <Disc size={20} />,
+  // {
+  //   id: "heatmaps",
+  //   label: "heatmaps",
+  //   path: "/admin/heatmaps",
+  //   icon: <Disc size={20} />,
     
-  },
-  {
-    id: "alertreports",
-    label: "alertreports",
-    path: "/admin/alertreports",
-    icon: <TriangleAlert size={20} />,
+  // },
+  // {
+  //   id: "alertreports",
+  //   label: "alertreports",
+  //   path: "/admin/alertreports",
+  //   icon: <TriangleAlert size={20} />,
     
-  },
+  // },
   {
     id: "settings",
     label: "settings",

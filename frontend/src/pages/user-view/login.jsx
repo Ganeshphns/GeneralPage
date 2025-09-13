@@ -60,7 +60,7 @@ dispatch(loginUser(formData)).then((data) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 ">
       {/* Email */}
       <div>
         <h2 className="text-center text-2xl font-bold text-gray-800 mb-6">
@@ -103,16 +103,17 @@ dispatch(loginUser(formData)).then((data) => {
             />
             <span>Show Password</span>
           </label>
-          <a href="#" className="text-sm text-blue-600 hover:underline">
-            Forgot Password?
-          </a>
+         <Link to="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">
+  Forgot Password?
+</Link>
+
         </div>
       </div>
 
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
       >
         Log in
       </button>
@@ -120,7 +121,7 @@ dispatch(loginUser(formData)).then((data) => {
           I don't have an account?{" "}
           <Link
             to="/auth/register"
-            className="text-blue-600 font-medium hover:underline"
+            className="text-blue-500 font-medium hover:underline"
           >
             Signup
           </Link>

@@ -1,81 +1,124 @@
+
+
+
 // import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // import axios from "axios";
 
+// // const initialState = {
+// //   // isAuthenticated: false,
+// //   // isLoading: true,
+// //   // user: null,
+// //   isAuthenticated: !!localStorage.getItem("token"),
+// //   isLoading: false,
+// //   user: JSON.parse(localStorage.getItem("user")) || null,
+// //   token: localStorage.getItem("token") || null,
+// // };
+
 // const initialState = {
-//   isAuthencated: false,
-//   isLoading: true,
-//   user: null,
-//   token: null,
+//   isAuthenticated: !!localStorage.getItem("token"),
+//   isLoading: false,
+//   user: JSON.parse(localStorage.getItem("user")) || null,
+//   token: localStorage.getItem("token") || null,
 // };
+
 
 // export const registerUser = createAsyncThunk(
 //   "/auth/register",
+
 //   async (formData) => {
 //     const response = await axios.post(
-//       "http://localhost:5001/api/auth/register",
+//       "http://localhost:5000/api/auth/register",
 //       formData,
 //       {
 //         withCredentials: true,
 //       }
 //     );
+
 //     return response.data;
 //   }
 // );
 
 // export const loginUser = createAsyncThunk(
-//   "/auth/loginUser",
-//   async (formData, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.post(
-//         "http://localhost:5001/api/auth/login",
-//         formData,
-//         {
-//           withCredentials: true,
-//         }
-//       );
-//       return response.data;
-//     } catch (error) {
-//       console.error("loginUser error:", error.response?.data);
-//       return rejectWithValue(
-//         error.response?.data || {
-//           success: false,
-//           message: "Something went wrong",
-//         }
-//       );
-//     }
+//   "/auth/login",
+
+//   async (formData) => {
+//     const response = await axios.post(
+//       "http://localhost:5000/api/auth/login",
+//       formData,
+//       {
+//         withCredentials: true,
+//       }
+//     );
+
+//     return response.data;
 //   }
 // );
 
-// export const logoutUser = createAsyncThunk("/auth/logout", async () => {
-//   const response = await axios.post(
-//     "http://localhost:5001/api/auth/logout",
-//     {},
-//     {
-//       withCredentials: true,
-//     }
-//   );
-//   return response.data;
-// });
+// export const logoutUser = createAsyncThunk(
+//   "/auth/logout",
 
-// export const checkAuth = createAsyncThunk("/auth/checkAuth", async (token) => {
-//   const response = await axios.get("http://localhost:5001/api/auth/check-auth", {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       "Cache-control": "no-store,no-cache,must-revalidate,proxy-revalidate",
-//     },
-//   });
-//   return response.data;
-// });
+//   async () => {
+//     const response = await axios.post(
+//       "http://localhost:5000/api/auth/logout",
+//       {},
+//       {
+//         withCredentials: true,
+//       }
+//     );
+
+//     return response.data;
+//   }
+// );
+
+// // export const checkAuth = createAsyncThunk(
+// //   "/auth/checkauth",
+
+// //   async () => {
+// //     const response = await axios.get(
+// //       "http://localhost:5000/api/auth/check-auth",
+// //       {
+// //         withCredentials: true,
+// //         headers: {
+// //           "Cache-Control":
+// //             "no-store, no-cache, must-revalidate, proxy-revalidate",
+// //         },
+// //       }
+// //     );
+
+// //     return response.data;
+// //   }
+// // );
+// export const checkAuth = createAsyncThunk(
+//   "/auth/checkauth",
+//   async (token) => {
+//     // if token exists, validate with backend
+//     if (!token) return { success: false };
+
+//     const response = await axios.get("http://localhost:5000/api/auth/check-auth", {
+//       withCredentials: true,
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+//       },
+//     });
+
+//     return response.data;
+//   }
+// );
+
 
 // const authSlice = createSlice({
 //   name: "auth",
 //   initialState,
 //   reducers: {
 //     setUser: (state, action) => {},
-//     resetTokenandCredentials: (state) => {
-//       state.isAuthencated = false;
+//      resetTokenandCredentials: (state) => {
+//       state.isAuthenticated = false;
 //       state.user = null;
 //       state.token = null;
+//        // ✅ clear localStorage
+//   localStorage.removeItem("token");
+//   localStorage.removeItem("user");
 //     },
 //   },
 //   extraReducers: (builder) => {
@@ -83,15 +126,15 @@
 //       .addCase(registerUser.pending, (state) => {
 //         state.isLoading = true;
 //       })
-//       .addCase(registerUser.fulfilled, (state) => {
+//       .addCase(registerUser.fulfilled, (state, action) => {
 //         state.isLoading = false;
 //         state.user = null;
-//         state.isAuthencated = true;
+//         state.isAuthenticated = false;
 //       })
-//       .addCase(registerUser.rejected, (state) => {
-//         state.isLoading = true;
+//       .addCase(registerUser.rejected, (state, action) => {
+//         state.isLoading = false;
 //         state.user = null;
-//         state.isAuthencated = true;
+//         state.isAuthenticated = false;
 //       })
 //       .addCase(loginUser.pending, (state) => {
 //         state.isLoading = true;
@@ -102,155 +145,152 @@
 //         state.isLoading = false;
 //         state.user = action.payload.success ? action.payload.user : null;
 //         state.isAuthenticated = action.payload.success;
-//         state.token = action.payload.token;
-//         sessionStorage.setItem("token", JSON.stringify(action.payload.token));
-//         console.log(state.isAuthenticated);
+//  // ✅ persist in localStorage
+//   if (action.payload.success && action.payload.token) {
+//     localStorage.setItem("token", action.payload.token);
+//     localStorage.setItem("user", JSON.stringify(action.payload.user));
+//   }
 //       })
 //       .addCase(loginUser.rejected, (state, action) => {
 //         state.isLoading = false;
 //         state.user = null;
 //         state.isAuthenticated = false;
-//         state.token = null;
+//       })
+//       .addCase(checkAuth.pending, (state) => {
+//         state.isLoading = true;
+//       })
+//       .addCase(checkAuth.fulfilled, (state, action) => {
+//         state.isLoading = false;
+//         state.user = action.payload.success ? action.payload.user : null;
+//         state.isAuthenticated = action.payload.success;
+//       })
+//       .addCase(checkAuth.rejected, (state, action) => {
+//         state.isLoading = false;
+//         state.user = null;
+//         state.isAuthenticated = false;
+//       })
+//       .addCase(logoutUser.fulfilled, (state, action) => {
+//         state.isLoading = false;
+//         state.user = null;
+//         state.isAuthenticated = false;
 //       });
 //   },
 // });
 
-// export const { setUser, resetTokenandCredentials } = authSlice.actions;
+// export const { setUser } = authSlice.actions;
 // export default authSlice.reducer;
+
 
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  isAuthenticated: false,
-  isLoading: true,
-  user: null,
+  isAuthenticated: !!localStorage.getItem("token"),
+  isLoading: false,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  token: localStorage.getItem("token") || null,
 };
 
+// -----------------------------
+// Register
+// -----------------------------
 export const registerUser = createAsyncThunk(
   "/auth/register",
-
   async (formData) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/register",
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
-
+    const response = await axios.post("http://localhost:5000/api/auth/register", formData, {
+      withCredentials: true,
+    });
     return response.data;
   }
 );
 
+// -----------------------------
+// Login
+// -----------------------------
 export const loginUser = createAsyncThunk(
   "/auth/login",
-
   async (formData) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/login",
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
-
+    const response = await axios.post("http://localhost:5000/api/auth/login", formData, {
+      withCredentials: true,
+    });
     return response.data;
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  "/auth/logout",
-
-  async () => {
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/logout",
-      {},
-      {
-        withCredentials: true,
-      }
-    );
-
-    return response.data;
-  }
-);
-
-export const checkAuth = createAsyncThunk(
-  "/auth/checkauth",
-
-  async () => {
-    const response = await axios.get(
-      "http://localhost:5000/api/auth/check-auth",
-      {
-        withCredentials: true,
-        headers: {
-          "Cache-Control":
-            "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
-      }
-    );
-
-    return response.data;
-  }
-);
+// -----------------------------
+// Logout
+// -----------------------------
+export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+  const response = await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+  return response.data;
+});
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action) => {},
+    // ✅ Set user directly from localStorage on refresh
+    setUser: (state, action) => {
+      state.isAuthenticated = action.payload.isAuthenticated;
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+    },
+    // ✅ Clear all auth data
+    resetTokenandCredentials: (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+      state.token = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    },
   },
   extraReducers: (builder) => {
     builder
+      // Register
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.isLoading = false;
-        state.user = null;
         state.isAuthenticated = false;
+        state.user = null;
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(registerUser.rejected, (state) => {
         state.isLoading = false;
-        state.user = null;
-        state.isAuthenticated = false;
       })
+
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action);
+        state.isLoading = false;
+        if (action.payload.success) {
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+          state.token = action.payload.token;
 
-        state.isLoading = false;
-        state.user = action.payload.success ? action.payload.user : null;
-        state.isAuthenticated = action.payload.success;
+          // ✅ Save to localStorage
+          localStorage.setItem("token", action.payload.token);
+          localStorage.setItem("user", JSON.stringify(action.payload.user));
+        }
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(loginUser.rejected, (state) => {
         state.isLoading = false;
-        state.user = null;
         state.isAuthenticated = false;
       })
-      .addCase(checkAuth.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload.success ? action.payload.user : null;
-        state.isAuthenticated = action.payload.success;
-      })
-      .addCase(checkAuth.rejected, (state, action) => {
-        state.isLoading = false;
-        state.user = null;
+
+      // Logout
+      .addCase(logoutUser.fulfilled, (state) => {
         state.isAuthenticated = false;
-      })
-      .addCase(logoutUser.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.user = null;
-        state.isAuthenticated = false;
+        state.token = null;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       });
   },
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, resetTokenandCredentials } = authSlice.actions;
 export default authSlice.reducer;
